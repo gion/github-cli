@@ -34,7 +34,7 @@
 	var commands = [
 		{
 			name: 'cleanDir',
-			code: 'rm -r ' + dirPath + dirNamePrefix + '*'	
+			code: 'rm -rf ' + dirPath + dirNamePrefix + '*'	
 		},
 		{
 			name: 'clone',
