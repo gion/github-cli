@@ -42,7 +42,7 @@
 		},
 		{
 			name: 'copy',
-			code: 'cp -r ' + templateDir + '/* ' + dir + '/'
+			code: 'cp -r ' + templateDir + '/. ' + dir + '/'
 		},
 		{
 			name: 'add',
