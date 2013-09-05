@@ -12,14 +12,15 @@
         "node.extend": "~1.0.8",
         "read": "~1.0.5",
         "mute-stream": "~0.0.4",
-        "async"
+        "async": "~0.2.9"
     },
     "devDependencies": {
         "github": "~0.1.10",
         "commander": "~2.0.0",
         "node.extend": "~1.0.8",
         "read": "~1.0.5",
-        "mute-stream": "~0.0.4"
+        "mute-stream": "~0.0.4",
+        "async": "~0.2.9"
     },
     "engines": {
         "node": ">=0.10.0"
