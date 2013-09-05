@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-(function(module, unde){
+(function(module, undefined){
 
 
     var GitHubApi = require('github'),
@@ -10,6 +10,8 @@
         extend = require('node.extend'),
 
         read = require('read'),
+
+        addTemplateFiles = require('./async.js').addTemplateFiles,
 
         github = new GitHubApi({
             // required
@@ -218,17 +220,31 @@
                             console.log('git clone ', cloneUrl());
 
 
-                            var collabMsg = config.organization ? 'Do you want to add a new team?' : 'Do you want to add a new collaborator?';
+                            api.read.bool('Do you want to add template files to the project?', function(){
+                                api.read._value({
+                                    prompt: 'enter the name of the template (defaults to "default-template"): ',
+                                    variable: 'templateName',
+                                    callback: function(){
+                                        api.validateTemplateName();
+                                        api.addTemplateToRepo(addColl);
+                                    }
+                                })
+                            }, addColl);
 
-                            api.read.bool(collabMsg, function(){
-                                if(config.organization) {
-                                    api.addTeam();
-                                } else {
-                                    api.addCollaborator(function(){
-                                        console.log('cuel!');
-                                    });
-                                }
-                            });
+                            function addColl(){
+                                var collabMsg = config.organization ? 'Do you want to add a new team?' : 'Do you want to add a new collaborator?';
+
+                                api.read.bool(collabMsg, function(){
+                                    if(config.organization) {
+                                        api.addTeam();
+                                    } else {
+                                        api.addCollaborator(function(){
+                                            console.log('cuel!');
+                                        });
+                                    }
+                                });
+                            }
+
                         });
                     };
 
@@ -464,7 +480,25 @@
                     api.doAction();
                 }
             });
-        }
+        },
+
+        addTemplateToRepo: function(callback){
+            var o = extend({}, config, {
+                repoUrl: cloneUrl()
+            });
+
+            addTemplateFiles(o, callback);
+        },
+
+        validateTemplateName: (function(){
+            var validTemplates = 'default-template'.split(' ');
+
+            return function(){
+                if(!config.templateName || validTemplates.indexOf(config.templateName) == -1) {
+                    config.templateName = validTemplates[0];
+                }
+            }
+        })()
     };
 
 
