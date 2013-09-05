@@ -81,6 +81,10 @@
             return 'https://github.com/organizations/'+ config.account +'/teams/' + teamId;
         },
 
+        cloneUrl = function(){
+            return 'git@github.com:' + config.account + '/' + config.repoName + '.git';
+        },
+
         handleErrorResponse = function(errorMsg){
 
             var error = JSON.parse(errorMsg.message);
@@ -211,7 +215,7 @@
                             console.log('[SUCCESS]', 'the requested repository is available at: ');
                             console.log(response.html_url);
                             console.log('and can be cloned with this command:');
-                            console.log('git clone ', response.git_url);
+                            console.log('git clone ', cloneUrl());
 
 
                             var collabMsg = config.organization ? 'Do you want to add a new team?' : 'Do you want to add a new collaborator?';
