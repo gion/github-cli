@@ -17,7 +17,7 @@
 		templateDir = dirPath + 'template',
 		dir = dirPath + dirName,
 
-		repo = 'git@github.com:gion/github-cli.git',
+		repo = 'git@github.com:gion/test.git',
 		user = 'gion',
 		pass = 'Lifeisgood13',
 		commitMessage = 'added template files';
