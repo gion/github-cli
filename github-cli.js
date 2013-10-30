@@ -30,6 +30,11 @@
             process.exit(1);
         },
 
+        sanitize = function(input, replacement) {
+            replacement = replacement || '-';
+            return input.toString().replace(/[\s\.\,\|\\\/\-\_\?\*\)\(\&\^\%\$\#\@\!]/g, replacement);
+        },
+
         randomItem = function(arr){
             return arr[Math.round(Math.random() * (arr.length - 1))];
         },
@@ -531,7 +536,7 @@
 
             config.account = program.account;
             config.private = !!(program.p || program['private']);
-            config.repoName = repoName;
+            config.repoName = sanitize(repoName);
             console.log('You want to create a new %s repo called "%s" in %s\'s account', (config.private ? 'PRIVATE' : 'PUBLIC'), config.repoName, config.account);
 
             api.read.bool('Continue?', function(){
