@@ -121,7 +121,8 @@
                 callback: null,
                 variable: 'user',
                 silent: false,
-                debug: true
+                debug: true,
+                sanitize: false
             },
             _value: function(options, doNotStore){
                 var settings = extend({}, this._defaults, options);
@@ -130,8 +131,16 @@
                     if(settings.debug)
                         console.log('You entered: ', input, settings);
 
-                    if(!doNotStore)
+                    if(settings.sanitize) {
+                        input = sanitize(input);
+                        if(settings.debug) {
+                            console.log('And the sanitized team name is: ', input)
+                        }
+                    }
+
+                    if(!doNotStore) {
                         config[settings.variable] = input;
+                    }
 
                     typeof settings.callback == 'function' && settings.callback();
                 });
@@ -479,6 +488,7 @@
         addTeam: function(){
             api.read._value({
                 variable: 'teamName',
+                sanitize: true,
                 prompt: 'What would this team be called? ',
                 callback: function(){
                     config.action = 'team';
