@@ -11,6 +11,8 @@
 
         read = require('read'),
 
+        path = require('path'),
+
         addTemplateFiles = require('./async.js').addTemplateFiles,
 
         magic = require('./repo-to-folders.js').magic,
@@ -23,8 +25,8 @@
         }),
 
         config = {
-            user: '',
-            pass: ''
+            user: 'xivic',
+            pass: 'burrito2'
         },
 
         die = function(){
@@ -90,7 +92,9 @@
             return 'https://github.com/organizations/'+ config.account +'/teams/' + teamId;
         },
 
-        cloneUrl = function(){
+        cloneUrl = function(useHttp){
+            if(useHttp)
+                return 'https://github.com/'+ config.account +'/'+ config.repoName +'.git';
             return 'git@github.com:' + config.account + '/' + config.repoName + '.git';
         },
 
@@ -326,7 +330,7 @@
 
 
                 case 'magic':
-                    config.repoUrl = cloneUrl();
+                    config.repoUrl = cloneUrl(true);
 
                     github.repos.getBranches({
                         user: config.account,
@@ -533,18 +537,7 @@
                     config.templateName = validTemplates[0];
                 }
             }
-        })(),
-
-        createMilestone: function(title, description, callback) {
-            var options = {
-                user: config.user,
-                repo: config.repoName,
-                title: title,
-                description: description,
-                state: 'open'
-            };
-            github.issues.createMilestone(options, callback);
-        }
+        })()
     };
 
 
@@ -638,14 +631,32 @@
             extend(config, {
                 action: 'magic',
                 repoName: repoName,
-                account: program.account
+                account: program.account,
+                branchRoot: path.resolve('../branches')
             });
 
-            if(user && pass) {
+            config.repoUrl = cloneUrl(true);
+            if(!!user && !!pass) {
 
+                extend(config, {
+                    user: user,
+                    pass: pass,
+                });
+
+                github.repos.getBranches({
+                    user: config.user,
+                    repo: config.repoName
+                }, function(err, result) {
+                    console.log('getBranches finished', err, result);
+
+                    magic(config, result, function(){
+                        console.log('ta da!!');
+                    });
+                });
+            } else {
+                setTimeout(api.read.user);
             }
 
-            setTimeout(api.read.user);
         });
 
 
